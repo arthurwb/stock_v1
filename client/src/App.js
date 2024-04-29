@@ -1,6 +1,4 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
 
 class App extends React.Component {
   state = {
@@ -49,7 +47,6 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <p>{!data ? "Loading..." : data.message}</p>
           <p>{!data ? "" : data.options[0].price}</p>
           <p>{!prevData ? "" : prevData.options[0].price} - {
