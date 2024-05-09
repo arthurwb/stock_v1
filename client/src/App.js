@@ -1,10 +1,12 @@
 import React from "react";
+import Option from "./Option"; // Import the Option component
+import "./css/app.css"; // Import CSS file
 
 class App extends React.Component {
   state = {
     data: null,
     prevData: null,
-    difference: null
+    differences: {}
   };
 
   componentDidMount() {
@@ -22,37 +24,42 @@ class App extends React.Component {
       .then((optionData) => {
         this.setState((prevState) => ({
           prevData: prevState.data,
-          data: optionData
+          data: optionData,
+          differences: this.calculateDifferences(prevState.data, optionData)
         }));
       })
       .catch((error) => console.error("Error fetching data:", error));
   };
 
-  difference = () => {
-    let optionDiffs = [];
-    this.state.data.options.forEach(option => {
-      this.state.prevData.options.forEach(prevOption => {
-        if (prevOption.name == option.name) {
-          optionDiffs.push({name: option.name, diff: option.price > prevOption.price});
+  calculateDifferences = (prevData, newData) => {
+    if (!prevData || !newData) return {};
+
+    const differences = {};
+    newData.options.forEach(newOption => {
+      prevData.options.forEach(prevOption => {
+        if (prevOption.name === newOption.name) {
+          differences[newOption.name] = newOption.price > prevOption.price;
         }
       });
     });
-    console.log(optionDiffs);
-    return optionDiffs;
+    return differences;
   }
 
   render() {
-    const { data, prevData } = this.state;
+    const { data, prevData, differences } = this.state;
 
     return (
       <div className="App">
-        <header className="App-header">
+        <header className="App-header">Welcome</header>
           <p>{!data ? "Loading..." : data.message}</p>
-          <p>{!data ? "" : data.options[0].price}</p>
-          <p>{!prevData ? "" : prevData.options[0].price} - {
-            data != null && prevData != null ? this.difference()[0].diff.toString() : ""
-          }</p>
-        </header>
+          {data && data.options.map(option => (
+            <Option
+              key={option.name}
+              option={option}
+              prevOption={prevData && prevData.options.find(prevOption => prevOption.name === option.name)}
+              differences={differences}
+            />
+          ))}
       </div>
     );
   }

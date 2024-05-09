@@ -9,6 +9,7 @@ dotenv.config();
 const app = express();
 
 main().catch((err) => console.log(err));
+
 async function main() {
     await mongoose.connect(process.env.URI);
     console.log("Connected to db!");
@@ -31,20 +32,39 @@ app.get("/api", async (req, res) => {
 });
 
 async function tickUpdateOptions() {
-    try {
-        const option = await Options.findOne({ name: "google" });
-    
-        if (!option) {
-          console.log("Option not found");
-        }
-        
-        let changeAmount = Math.floor(Math.random() * 11) - 5;
-        option.price += changeAmount;
-    
-        await option.save();
-    
-        console.log("Option update: " + option.price);
-      } catch (error) {
-        console.log("Internal Server Error" + error);
+  try {
+    const optionsToUpdate = ["google", "microsoft", "amazon"];
+
+    for (const optionName of optionsToUpdate) {
+      const option = await Options.findOne({ name: optionName });
+
+      if (!option) {
+        console.log(`Option '${optionName}' not found`);
+        continue;
       }
+
+      const changeAmount = Math.floor(Math.random() * 11) - 5;
+      option.price += changeAmount;
+
+      console.log(option); // Add this line to print the option object
+      console.log(option.historicalPrices);
+
+      if (!option.historicalPrices) {
+        option.historicalPrices = [option.price];
+      } else {
+        option.historicalPrices.push(option.price);
+        
+        const maxSize = 100;
+        if (option.historicalPrices.length > maxSize) {
+          option.historicalPrices.shift();
+        }
+      }
+
+      await option.save();
+
+      // console.log(`Option '${optionName}' updated: ${option.price}`);
+    }
+  } catch (error) {
+    console.log("Internal Server Error: " + error);
+  }
 }
