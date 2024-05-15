@@ -4,26 +4,39 @@ import { faCircleUp, faCircleDown } from "@fortawesome/free-solid-svg-icons";
 import Chart from "chart.js/auto";
 
 class Option extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      renderCheck: this.props.renderCheck
+    };
+  }
+
   chartRef = React.createRef();
   chartInstance = null;
 
   componentDidMount() {
-    this.renderChart();
+    if (this.state.renderCheck) {
+      this.renderChart();
+    }
   }
 
   componentDidUpdate() {
-    this.destroyChart();
-    this.renderChart();
+    if (this.state.renderCheck) {
+      this.destroyChart();
+      this.renderChart();
+    }
   }
 
   componentWillUnmount() {
-    this.destroyChart();
+    if (this.state.renderCheck) {
+      this.destroyChart();
+    }
   }
 
   renderChart() {
     const { option, differences } = this.props;
     const diff = differences[option.name];
-  
+    
     const ctx = this.chartRef.current.getContext("2d");
     this.chartInstance = new Chart(ctx, {
       type: "line",
@@ -54,7 +67,7 @@ class Option extends React.Component {
   }
 
   render() {
-    const { option, prevOption, differences } = this.props;
+    const { option, prevOption, differences, renderCheck } = this.props;
     const diff = prevOption && differences[option.name]; // Retrieve difference from differences object based on option name
 
     return (
@@ -74,7 +87,7 @@ class Option extends React.Component {
         <div className="col-md-4">
           <p>Price: {option.price}</p>
         </div>
-        <canvas className="graph" ref={this.chartRef} />
+          {renderCheck ? <canvas className="graph" ref={this.chartRef} /> : <></>}
       </div>
     );
   }
