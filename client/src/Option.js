@@ -85,7 +85,7 @@ class Option extends React.Component {
           <p>Name: {option.name}</p>
         </div>
         <div className="col-md-4">
-          {option.historicalPrices[99] > option.historicalPrices[98] ? (
+          {option.historicalPrices[option.historicalPrices.length - 1] > option.historicalPrices[option.historicalPrices.length - 2] ? (
             <FontAwesomeIcon icon={faCircleUp} color="green" />
           ) : (
             <FontAwesomeIcon icon={faCircleDown} color="red" />

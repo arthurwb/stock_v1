@@ -30,9 +30,17 @@ class OptionData extends Component {
   };
 
   renderLengthClick = () => {
-    this.state.renderLength == 100
-      ? this.setState({ renderLength: 500 })
-      : this.setState({ renderLength: 100 })
+    switch (this.state.renderLength) {
+      case 100:
+        this.setState({ renderLength: 200 })
+        break;
+      case 200:
+        this.setState({ renderLength: 500 })
+        break;
+      case 500:
+        this.setState({ renderLength: 100 })
+        break;
+    }
   };
 
   render() {

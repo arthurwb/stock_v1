@@ -42,7 +42,7 @@ class Data extends Component {
               <h2>
                 <a
                   style={
-                    option.historicalPrices[99] > option.historicalPrices[98]
+                    option.historicalPrices[option.historicalPrices.length - 1] > option.historicalPrices[option.historicalPrices.length - 2]
                       ? { color: "green" }
                       : { color: "red" }
                   }

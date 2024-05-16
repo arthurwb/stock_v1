@@ -46,7 +46,7 @@ async function tickUpdateOptions() {
       const changeAmount = Math.floor(Math.random() * 11) - 5;
       option.price += changeAmount;
 
-      console.log(option.historicalPrices);
+      console.log(option.name + ": " + option.historicalPrices.slice(-(5)).reverse());
 
       if (!option.historicalPrices) {
         option.historicalPrices = [option.price];
@@ -63,6 +63,7 @@ async function tickUpdateOptions() {
 
       // console.log(`Option '${optionName}' updated: ${option.price}`);
     }
+    console.log("----");
   } catch (error) {
     console.log("Internal Server Error: " + error);
   }
