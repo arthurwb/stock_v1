@@ -1,40 +1,42 @@
-body {
-    background-color: #333;
-    color: #fff;
-  }
-  
-  .Data {
-    text-align: center;
-  }
-  
-  .Data-header {
-    background-color: #222;
-    padding: 20px;
-    font-size: 50px;
-  }
+body, html {
+  background-color: #333;
+  color: #fff;
+}
 
-  .option {
-    background-color: #222;
-    padding: 10px;
-    margin: 5px;
-  }
+.row {
+  margin: 0
+}
 
-  .graph {
-    max-height: 400px;
-  }
-  
-  .button {
-    background-color: #ff0000;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-  }
-  
-  .button:hover {
-    background-color: #cc0000;
-  }
-  
-  
+.Data {
+  text-align: center;
+}
+
+.Data-header {
+  background-color: #222;
+  padding: 20px;
+  font-size: 50px;
+}
+
+.option {
+  background-color: #222;
+  padding: 10px;
+  margin: 5px;
+}
+
+.graph {
+  max-height: 400px;
+}
+
+.button {
+  background-color: #ff0000;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.button:hover {
+  background-color: #cc0000;
+}

@@ -46,7 +46,6 @@ async function tickUpdateOptions() {
       const changeAmount = Math.floor(Math.random() * 11) - 5;
       option.price += changeAmount;
 
-      console.log(option); // Add this line to print the option object
       console.log(option.historicalPrices);
 
       if (!option.historicalPrices) {
