@@ -53,7 +53,7 @@ async function tickUpdateOptions() {
       } else {
         option.historicalPrices.push(option.price);
         
-        const maxSize = 100;
+        const maxSize = 500;
         if (option.historicalPrices.length > maxSize) {
           option.historicalPrices.shift();
         }

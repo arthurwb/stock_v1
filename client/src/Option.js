@@ -8,6 +8,7 @@ class Option extends React.Component {
     super(props);
     this.state = {
       renderCheck: this.props.renderCheck,
+      renderLength: this.props.renderLength,
     };
   }
 
@@ -38,29 +39,33 @@ class Option extends React.Component {
     const diff = differences[option.name];
 
     const ctx = this.chartRef.current.getContext("2d");
+    let last100Prices = option.historicalPrices.slice(-(this.props.renderLength)); // Get the last 100 items of the array
+
     this.chartInstance = new Chart(ctx, {
       type: "line",
       data: {
-        labels: Array.from(Array(option.historicalPrices.length).keys()),
+        labels: Array.from(Array(last100Prices.length).keys()), // Update labels to reflect the last 100 items
         datasets: [
           {
             label: "Historical Prices",
-            data: option.historicalPrices,
+            data: last100Prices, // Use last 100 items here
             backgroundColor: "rgba(255, 255, 255, 0)", // Transparent background for the line
             borderWidth: 4, // Increase line width for visibility
-            pointBackgroundColor: option.historicalPrices.map(
-              (price, index) => {
-                return option.historicalPrices[index] >
-                  option.historicalPrices[index - 1]
-                  ? "green"
-                  : "red";
-              }
-            ),
+            pointBackgroundColor: last100Prices.map((price, index) => {
+              return last100Prices[index] > last100Prices[index - 1]
+                ? "green"
+                : "red";
+            }),
           },
         ],
       },
       options: {
         animation: false, // Disable animations
+        scales: {
+          x: {
+            display: false, // Hide x-axis
+          },
+        },
       },
     });
   }
@@ -87,9 +92,12 @@ class Option extends React.Component {
           )}
         </div>
         <div className="col-md-4">
-          <div style={{display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", alignItems: "center" }}>
             {option.historicalPrices
-              .slice(90, 101)
+              .slice(
+                option.historicalPrices.length - 9,
+                option.historicalPrices.length
+              )
               .reverse() // Reverse the array
               .map((price, index, prices) => (
                 <p
@@ -98,8 +106,7 @@ class Option extends React.Component {
                     fontSize: `${100 - index * 5}%`, // Decreasing font size
                     opacity: `${1 - index * 0.1}`, // Decreasing opacity
                     marginRight: "5px", // Adding some space between prices
-                    color:
-                      price > prices[index + 1] ? "green" : "red", // Compare with the previous price
+                    color: price > prices[index + 1] ? "green" : "red", // Compare with the previous price
                   }}
                 >
                   {price} &#8592;
@@ -107,7 +114,7 @@ class Option extends React.Component {
               ))}
           </div>
         </div>
-          {renderCheck ? <canvas className="graph" ref={this.chartRef} /> : <></>}
+        {renderCheck ? <canvas className="graph" ref={this.chartRef} /> : <></>}
       </div>
     );
   }

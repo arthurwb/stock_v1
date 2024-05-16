@@ -62,6 +62,7 @@ class Data extends Component {
                 }
                 differences={differences}
                 renderCheck={false}
+                renderLength={100}
               />
             </div>
           ))}
