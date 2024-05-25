@@ -13,6 +13,7 @@ class Login extends Component {
 
   handleLogin = () => {
     const { username, password } = this.state;
+    document.cookie = `username=${username}`;
     // Perform login authentication here (e.g., call an API)
     // For simplicity, let's just check if username and password are not empty
     if (username !== '' && password !== '') {
@@ -24,6 +25,7 @@ class Login extends Component {
   };
 
   handleLogout = () => {
+    document.cookie = `username=`;
     this.setState({
       loggedIn: false,
       username: '',

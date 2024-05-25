@@ -1,6 +1,7 @@
 import React, { Component } from "react";
+
 import Option from "./Option";
-import { fetchData, calculateDifferences } from "./util/CalcData"; // Import fetchData and calculateDifferences functions
+import { fetchData, calculateDifferences, formatedCookie } from "./util/CalcData"; // Import fetchData and calculateDifferences functions
 
 class Data extends Component {
   state = {
@@ -33,7 +34,7 @@ class Data extends Component {
 
     return (
       <div className="Data">
-        <header className="Data-header">Welcome</header>
+        <header className="Data-header">Welcome {formatedCookie(document.cookie)}</header>
         <a href="/about-us">About Us</a>
         <p>{!data ? "Loading..." : data.message}</p>
         {data &&
