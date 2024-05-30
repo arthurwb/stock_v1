@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Navigate  } from 'react-router-dom';
 
 import Option from "./Option";
 import { fetchData, calculateDifferences, formatedCookie } from "./util/CalcData"; // Import fetchData and calculateDifferences functions
@@ -32,9 +33,13 @@ class Data extends Component {
   render() {
     const { data, prevData, differences } = this.state;
 
+    if (!formatedCookie(document.cookie).username) {
+      return <Navigate to="/login" replace />;
+    }
+
     return (
       <div className="Data">
-        <header className="Data-header">Welcome {formatedCookie(document.cookie)}</header>
+        <header className="Data-header">Welcome {formatedCookie(document.cookie).username}</header>
         <a href="/about-us">About Us</a>
         <p>{!data ? "Loading..." : data.message}</p>
         {data &&

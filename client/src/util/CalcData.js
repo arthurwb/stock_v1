@@ -20,5 +20,8 @@ export const calculateDifferences = (prevData, newData) => {
 
 export const formatedCookie = (cookie) => {
   cookie = cookie.split(";")
-  return cookie ? cookie[0].split("=")[1] : null
+  const dic = {
+    "username": cookie[0].split("=")[1]
+  }
+  return cookie ? dic : null
 };
