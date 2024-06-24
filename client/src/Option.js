@@ -39,7 +39,7 @@ class Option extends React.Component {
     const diff = differences[option.name];
 
     const ctx = this.chartRef.current.getContext("2d");
-    let last100Prices = option.historicalPrices.slice(-(this.props.renderLength)); // Get the last 100 items of the array
+    let last100Prices = option.historicalPrices.slice(-this.props.renderLength); // Get the last 100 items of the array
 
     this.chartInstance = new Chart(ctx, {
       type: "line",
@@ -81,38 +81,46 @@ class Option extends React.Component {
 
     return (
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-6">
           <p>Name: {option.name}</p>
         </div>
-        <div className="col-md-4">
-          {option.historicalPrices[option.historicalPrices.length - 1] > option.historicalPrices[option.historicalPrices.length - 2] ? (
+        <div className="col-md-6">
+          {option.historicalPrices[option.historicalPrices.length - 1] >
+          option.historicalPrices[option.historicalPrices.length - 2] ? (
             <FontAwesomeIcon icon={faCircleUp} color="green" />
           ) : (
             <FontAwesomeIcon icon={faCircleDown} color="red" />
           )}
         </div>
-        <div className="col-md-4">
-          <div style={{ display: "flex", alignItems: "center" }}>
-            {option.historicalPrices
-              .slice(
-                option.historicalPrices.length - 9,
-                option.historicalPrices.length
-              )
-              .reverse() // Reverse the array
-              .map((price, index, prices) => (
-                <p
-                  key={index}
-                  style={{
-                    fontSize: `${100 - index * 5}%`, // Decreasing font size
-                    opacity: `${1 - index * 0.1}`, // Decreasing opacity
-                    marginRight: "5px", // Adding some space between prices
-                    color: price > prices[index + 1] ? "green" : "red", // Compare with the previous price
-                  }}
-                >
-                  {price} &#8592;
-                </p>
-              ))}
-          </div>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            width: "80%",
+            margin: "auto",
+          }}
+        >
+          {option.historicalPrices
+            .slice(
+              option.historicalPrices.length - 20,
+              option.historicalPrices.length
+            )
+            .reverse() // Reverse the array
+            .map((price, index, prices) => (
+              <p
+                key={index}
+                style={{
+                  // fontSize: `${100 - index * 2}%`, // Decreasing font size
+                  opacity: `${1 - index * 0.05}`, // Decreasing opacity
+                  marginRight: "10px", // Increase horizontal space between prices
+                  marginBottom: "10px", // Add vertical space between prices
+                  color: price > prices[index + 1] ? "green" : "red", // Compare with the previous price
+                  fontWeight: index == 0 ? "bold" : ""
+                }}
+              >
+                {price} &#8592;
+              </p>
+            ))}
         </div>
         {renderCheck ? <canvas className="graph" ref={this.chartRef} /> : <></>}
       </div>
