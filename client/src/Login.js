@@ -43,6 +43,7 @@ class Login extends Component {
 
   handleCreateUser = () => {
     const { username, password } = this.state;
+    const carrots = [{carrots: 0}];
 
     // Send a POST request to your server-side createUser endpoint
     fetch("/createUser", {
@@ -50,7 +51,7 @@ class Login extends Component {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, carrots }),
     })
       .then((response) => response.json())
       .then((data) => {

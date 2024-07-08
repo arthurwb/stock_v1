@@ -5,11 +5,12 @@ const dotenv = require("dotenv");
 
 const Options = require("./models/option");
 const Users = require("./models/users");
+const { tickUpdateOptions, anotherUtilityFunction } = require("./util");
 
 dotenv.config();
 
 const app = express();
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 
 main().catch((err) => console.log(err));
 
@@ -51,7 +52,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.post('/createUser', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, carrots } = req.body;
 
   try {
     // Check if user already exists
@@ -60,7 +61,7 @@ app.post('/createUser', async (req, res) => {
       res.json({ success: false, message: 'User already exists' });
     } else {
       // Create new user
-      const newUser = new Users({ username, password });
+      const newUser = new Users({ username, password, carrots });
       await newUser.save();
       res.json({ success: true, message: 'User created successfully' });
     }
@@ -70,42 +71,31 @@ app.post('/createUser', async (req, res) => {
   }
 });
 
-async function tickUpdateOptions() {
+app.post('/buy/:option', async (req, res) => {
+  const { username } = req.body;
+  const { option } = req.params;
+
   try {
-    const optionsToUpdate = ["google", "microsoft", "amazon"];
+    console.log(username);
+    const user = await Users.findOne({ username }).exec();
+    console.log("user found: " + user);
 
-    for (const optionName of optionsToUpdate) {
-      const option = await Options.findOne({ name: optionName });
-
-      if (!option) {
-        console.log(`Option '${optionName}' not found`);
-        continue;
-      }
-
-      const changeAmount = Math.floor(Math.random() * 11) - 5;
-      option.price += changeAmount;
-
-      console.log(
-        option.name + ": " + option.historicalPrices.slice(-5).reverse()
-      );
-
-      if (!option.historicalPrices) {
-        option.historicalPrices = [option.price];
-      } else {
-        option.historicalPrices.push(option.price);
-
-        const maxSize = 500;
-        if (option.historicalPrices.length > maxSize) {
-          option.historicalPrices.shift();
-        }
-      }
-
-      await option.save();
-
-      // console.log(`Option '${optionName}' updated: ${option.price}`);
+    // Find the option by name
+    const optionToAdd = await Options.findOne({ name: option }).exec();
+    if (!optionToAdd) {
+      res.status(404).json({ success: false, message: `Option '${option}' not found` });
+      return;
     }
-    console.log("----");
+    console.log("option found: " + optionToAdd.name);
+
+    // Add the option to the user's carrots array
+    user.carrots.push(optionToAdd.name); // Assuming `carrots` is an array of option IDs
+    console.log(optionToAdd.name);
+    await user.save();
+
+    res.json({ success: true, message: `Option '${option}' added to carrots`, user });
   } catch (error) {
-    console.log("Internal Server Error: " + error);
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
-}
+});

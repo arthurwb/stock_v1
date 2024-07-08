@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Option from "./Option";
-import { fetchData, calculateDifferences } from "./util/CalcData";
+import { fetchData, calculateDifferences, formatedCookie } from "./util/CalcData";
 
 class OptionData extends Component {
   state = {
@@ -43,6 +43,27 @@ class OptionData extends Component {
     }
   };
 
+  buy(option) {
+    const username = formatedCookie(document.cookie).username;
+    fetch(`/buy/${option.name}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+    alert(option.name);
+  }
+
   render() {
     const optionNameFromUrl = window.location.pathname.split("/")[2];
     const { data, prevData, differences } = this.state;
@@ -76,6 +97,7 @@ class OptionData extends Component {
           <div>
             <button onClick={this.renderLengthClick}>Change State</button>
             <p>Current State: {this.state.renderLength}</p>
+            <button onClick={() => this.buy(matchedOption)}>Buy</button>
           </div>
         </div>
       </div>
