@@ -78,6 +78,10 @@ app.post('/buy/:option', async (req, res) => {
   try {
     console.log(username);
     const user = await Users.findOne({ username }).exec();
+    if (!user) {
+      res.status(404).json({ success: false, message: `User '${username}' not found` });
+      return;
+    }
     console.log("user found: " + user);
 
     // Find the option by name
@@ -88,9 +92,23 @@ app.post('/buy/:option', async (req, res) => {
     }
     console.log("option found: " + optionToAdd.name);
 
-    // Add the option to the user's carrots array
-    user.carrots.push(optionToAdd.name); // Assuming `carrots` is an array of option IDs
-    console.log(optionToAdd.name);
+    // Check if the user already has the option
+    let optionFound = false;
+    for (let carrot of user.carrots) {
+      if (carrot[optionToAdd.name] !== undefined) {
+        carrot[optionToAdd.name] += 12;
+        optionFound = true;
+        break;
+      }
+    }
+
+    // If the option is not found, add it to the user's carrots array
+    if (!optionFound) {
+      user.carrots.push({ [optionToAdd.name]: 12 });
+    }
+
+    console.log("bef save:"+user);
+    // Save the updated user object
     await user.save();
 
     res.json({ success: true, message: `Option '${option}' added to carrots`, user });
