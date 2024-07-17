@@ -35,6 +35,16 @@ app.get("/api", async (req, res) => {
   res.json({ message: "Connected to Database", options: options });
 });
 
+app.post("/api-user", async (req, res) => {
+  const { username, password } = req.body;
+  const user = await Users.findOne({ username }).exec();
+  if (user) {
+    res.json(user);
+  } else {
+    res.json({ success: false, message: "Invalid username or password" });
+  }
+})
+
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -52,7 +62,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.post('/createUser', async (req, res) => {
-  const { username, password, carrots } = req.body;
+  const { username, password, carrots, wallet } = req.body;
   
   try {
     // Check if user already exists
@@ -61,7 +71,7 @@ app.post('/createUser', async (req, res) => {
       res.json({ success: false, message: 'User already exists' });
     } else {
       // Create new user
-      const newUser = new Users({ username, password, carrots });
+      const newUser = new Users({ username, password, carrots, wallet });
       await newUser.save();
       res.json({ success: true, message: 'User created successfully' });
     }

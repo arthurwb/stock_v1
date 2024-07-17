@@ -44,6 +44,7 @@ class Login extends Component {
   handleCreateUser = () => {
     const { username, password } = this.state;
     const carrots = {carrots: 0};
+    const wallet = 0;
 
     // Send a POST request to your server-side createUser endpoint
     fetch("/createUser", {
@@ -51,14 +52,12 @@ class Login extends Component {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password, carrots }),
+      body: JSON.stringify({ username, password, carrots, wallet }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          alert("User created successfully!");
-          // Optionally, you can switch to login mode after creating user
-          this.setState({ createUserMode: false });
+          return data;
         } else {
           alert(data.message);
         }

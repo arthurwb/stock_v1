@@ -2,22 +2,32 @@ import React, { Component } from "react";
 import { Navigate  } from 'react-router-dom';
 
 import Option from "./Option";
-import { fetchData, calculateDifferences, formatedCookie } from "./util/CalcData"; // Import fetchData and calculateDifferences functions
+import { fetchData, calculateDifferences, formatedCookie, getUserData } from "./util/CalcData"; // Import fetchData and calculateDifferences functions
 
 class Data extends Component {
   state = {
+    userData: "",
     data: null,
     prevData: null,
     differences: {},
   };
 
   componentDidMount() {
+    this.setUserData();
     this.fetchData(); // Fetch initial data
     this.intervalId = setInterval(this.fetchData, 5000); // Set interval to fetch data every 5 seconds
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalId); // Clear interval when component unmounts
+  }
+  
+  setUserData = async () => {
+    const userData = await getUserData(formatedCookie(document.cookie).username);
+    this.setState(() => ({
+      userData: userData
+    }));
+    return await getUserData(formatedCookie(document.cookie).username);
   }
 
   fetchData = () => {
@@ -39,7 +49,7 @@ class Data extends Component {
 
     return (
       <div className="Data">
-        <header className="Data-header">Welcome {formatedCookie(document.cookie).username}</header>
+        <header className="Data-header">Welcome {formatedCookie(document.cookie).username} --- Wallet: {this.state.userData.wallet}</header>
         <a href="/about-us">About Us</a>
         <p>{!data ? "Loading..." : data.message}</p>
         {data &&

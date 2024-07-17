@@ -19,9 +19,23 @@ export const calculateDifferences = (prevData, newData) => {
 };
 
 export const formatedCookie = (cookie) => {
-  cookie = cookie.split(";")
+  cookie = cookie.split(";");
   const dic = {
-    "username": cookie[0].split("=")[1]
-  }
-  return cookie ? dic : null
+    username: cookie[0].split("=")[1],
+  };
+  return cookie ? dic : null;
+};
+
+export const getUserData = (username) => {
+  return fetch("/api-user", {
+    method: "POST", // or 'PUT', 'DELETE', etc.
+    headers: {
+      "Content-Type": "application/json", // Specify the content type
+    },
+    body: JSON.stringify({
+      username: username, // Replace with your actual data
+    }),
+  })
+    .then((res) => res.json())
+    .catch((error) => console.error("Error fetching data:", error));
 };
