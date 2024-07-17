@@ -1,7 +1,10 @@
 import React, { useRef, useEffect } from "react";
+import { Navigate  } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCircleDown } from "@fortawesome/free-solid-svg-icons";
 import Chart from "chart.js/auto";
+
+import { fetchData, calculateDifferences, formatedCookie } from "./util/CalcData"; // Import fetchData and calculateDifferences functions
 
 class Option extends React.Component {
   constructor(props) {
@@ -78,6 +81,10 @@ class Option extends React.Component {
 
   render() {
     const { option, renderCheck } = this.props;
+
+    if (!formatedCookie(document.cookie).username) {
+      return <Navigate to="/login" replace />;
+    }
 
     return (
       <div className="row">

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import Option from "./Option";
+import BuyComponent from "./components/BuyComponent";
+import SellComponent from "./components/SellComponent";
 import { fetchData, calculateDifferences, formatedCookie } from "./util/CalcData";
 
 class OptionData extends Component {
@@ -8,6 +10,7 @@ class OptionData extends Component {
     prevData: null,
     differences: {},
     renderLength: 100,
+    purchaseAmount: 0
   };
 
   componentDidMount() {
@@ -43,7 +46,13 @@ class OptionData extends Component {
     }
   };
 
-  buy(option) {
+  updateAmount(amount) {
+    const data = amount.nativeEvent.data;
+    this.purchaseAmount = data;
+    console.log(this.purchaseAmount);
+  }
+
+  buy(option, amount) {
     const username = formatedCookie(document.cookie).username;
     fetch(`/buy/${option.name}`, {
       method: 'POST',
@@ -51,7 +60,8 @@ class OptionData extends Component {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: username
+        username: username,
+        amount: amount
       })
     })
     .then(response => response.json())
@@ -62,7 +72,7 @@ class OptionData extends Component {
       console.error('Error:', error);
     });
     alert(option.name);
-  }
+  };
 
   render() {
     const optionNameFromUrl = window.location.pathname.split("/")[2];
@@ -97,7 +107,8 @@ class OptionData extends Component {
           <div>
             <button onClick={this.renderLengthClick}>Change State</button>
             <p>Current State: {this.state.renderLength}</p>
-            <button onClick={() => this.buy(matchedOption)}>Buy</button>
+            <BuyComponent option={optionNameFromUrl}></BuyComponent>
+            <SellComponent option={optionNameFromUrl}></SellComponent>
           </div>
         </div>
       </div>
