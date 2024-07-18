@@ -12,15 +12,15 @@ class Data extends Component {
     differences: {},
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this.setUserData();
     this.fetchData(); // Fetch initial data
     this.intervalId = setInterval(this.fetchData, 5000); // Set interval to fetch data every 5 seconds
-  }
+  };
 
   componentWillUnmount() {
     clearInterval(this.intervalId); // Clear interval when component unmounts
-  }
+  };
   
   setUserData = async () => {
     const userData = await getUserData(formatedCookie(document.cookie).username);
@@ -28,7 +28,7 @@ class Data extends Component {
       userData: userData
     }));
     return await getUserData(formatedCookie(document.cookie).username);
-  }
+  };
 
   fetchData = () => {
     fetchData().then((optionData) => {
@@ -64,7 +64,7 @@ class Data extends Component {
                   }
                   href={`/data/${option.name}`}
                 >
-                  {option.name}
+                  {option.name} {this.state.userData.carrots[option.name] ? this.state.userData.carrots[option.name] : "0"}
                 </a>
               </h2>
               <Option

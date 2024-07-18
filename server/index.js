@@ -100,7 +100,7 @@ app.post('/buy/:option', async (req, res) => {
       res.status(404).json({ success: false, message: `Option '${option}' not found` });
       return;
     }
-    console.log("option found: " + optionToAdd.name);
+    console.log("option found: " + optionToAdd.name + " - " + optionToAdd.price);
 
     let optionFound = false;
     user.carrots.forEach((value, key) => {
@@ -113,6 +113,13 @@ app.post('/buy/:option', async (req, res) => {
 
     if (!optionFound) {
       user.carrots.set(optionToAdd.name, amount)
+    }
+
+    if (user.wallet >= optionToAdd.price) {
+      user.wallet = user.wallet - (optionToAdd.price * amount);
+    } else {
+      res.status(404).json({ success: false, message: `Wallet Insufficient` });
+      return;
     }
 
     console.log("bef save:"+user);
@@ -145,7 +152,7 @@ app.post('/sell/:option', async (req, res) => {
       res.status(404).json({ success: false, message: `Option '${option}' not found` });
       return;
     }
-    console.log("option found: " + optionToSell.name);
+    console.log("option found: " + optionToSell.name + " " + optionToSell.price);
 
     let optionFound = false;
     user.carrots.forEach((value, key) => {
@@ -156,6 +163,7 @@ app.post('/sell/:option', async (req, res) => {
           optionFound = true; // Option was found but not enough to sell
           return;
         }
+        user.wallet += optionToSell.price;
         user.carrots.set(key, (value - amount));
         optionFound = true;
       }

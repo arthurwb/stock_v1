@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCircleDown } from "@fortawesome/free-solid-svg-icons";
 import Chart from "chart.js/auto";
 
-import { fetchData, calculateDifferences, formatedCookie } from "./util/CalcData"; // Import fetchData and calculateDifferences functions
+import { fetchData, calculateDifferences, formatedCookie, getOptionWallet } from "./util/CalcData"; // Import fetchData and calculateDifferences functions
 
 class Option extends React.Component {
   constructor(props) {

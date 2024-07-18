@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import Option from "./Option";
 import BuyComponent from "./components/BuyComponent";
 import SellComponent from "./components/SellComponent";
-import { fetchData, calculateDifferences, formatedCookie } from "./util/CalcData";
+import { fetchData, calculateDifferences, formatedCookie, getUserData } from "./util/CalcData";
 
 class OptionData extends Component {
   state = {
+    userData: "",
     data: null,
     prevData: null,
     differences: {},
@@ -14,12 +15,21 @@ class OptionData extends Component {
   };
 
   componentDidMount() {
+    this.setUserData();
     this.fetchData();
     this.intervalId = setInterval(this.fetchData, 5000);
   }
 
   componentWillUnmount() {
     clearInterval(this.intervalId);
+  }
+
+  setUserData = async () => {
+    const userData = await getUserData(formatedCookie(document.cookie).username);
+    this.setState(() => ({
+      userData: userData
+    }));
+    return await getUserData(formatedCookie(document.cookie).username);
   }
 
   fetchData = () => {
@@ -84,7 +94,7 @@ class OptionData extends Component {
 
     return (
       <div className="Data">
-        <header className="Data-header">{optionNameFromUrl}</header>
+        <header className="Data-header">{optionNameFromUrl} - Wallet: {this.state.userData.wallet}</header>
         <a href="/">Home</a>
         {matchedOption && (
           <div key={matchedOption.name}>
